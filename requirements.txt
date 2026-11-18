@@ -1,0 +1,10 @@
+# Kurigram = maintained drop-in fork of Pyrogram (import name stays "pyrogram")
+kurigram>=2.1
+# Optional C crypto for faster MTProto; remove this line if it fails to build
+tgcrypto>=1.2.5
+python-dotenv>=1.0.1
+aiohttp>=3.9
+aiohttp-socks>=0.9
+jdatetime>=5.0
+tzdata            # timezone data for Windows (Asia/Tehran)
+qrcode[pil]>=7.4

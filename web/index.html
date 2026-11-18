@@ -1,0 +1,1079 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>پنل سلف‌بات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f4f8;--card:#ffffff;--side:#ffffff;--text:#151821;--muted:#6b7183;--line:#e6e8ef;--field:#f7f8fb;
+  --accent:#4f46e5;--accent-2:#7c3aed;--accent-soft:#eef0ff;--ok:#059669;--ok-soft:#e7f8f1;--bad:#e11d48;--bad-soft:#fff0f3;
+  --shadow:0 1px 2px rgba(16,24,40,.04),0 4px 16px rgba(16,24,40,.06);--radius:16px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0c0e14;--card:#151822;--side:#11131b;--text:#e8eaf2;--muted:#8e94a8;--line:#242838;--field:#0f1119;
+  --accent:#818cf8;--accent-2:#a78bfa;--accent-soft:#1e2140;--ok:#34d399;--ok-soft:#0f2a22;--bad:#fb7185;--bad-soft:#2d1219;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+}}
+:root[data-theme="dark"]{
+  --bg:#0c0e14;--card:#151822;--side:#11131b;--text:#e8eaf2;--muted:#8e94a8;--line:#242838;--field:#0f1119;
+  --accent:#818cf8;--accent-2:#a78bfa;--accent-soft:#1e2140;--ok:#34d399;--ok-soft:#0f2a22;--bad:#fb7185;--bad-soft:#2d1219;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:14.5px/1.75 Vazirmatn,Tahoma,sans-serif;-webkit-font-smoothing:antialiased}
+::selection{background:var(--accent-soft)}
+a{color:var(--accent)}
+
+/* ---------- shell ---------- */
+#app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+#side{background:var(--side);border-left:1px solid var(--line);position:sticky;top:0;height:100vh;overflow-y:auto;padding:18px 12px}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 10px 18px;font-weight:700;font-size:16px}
+.brand i{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-style:normal;color:#fff;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 4px 12px rgba(79,70,229,.35)}
+nav .grp{font-size:11.5px;color:var(--muted);padding:14px 12px 4px;letter-spacing:.02em}
+nav button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:var(--text);opacity:.82;
+  padding:8px 12px;border-radius:10px;cursor:pointer;font:inherit;text-align:right;transition:background .15s,opacity .15s}
+nav button span{width:22px;text-align:center}
+nav button:hover{background:var(--field);opacity:1}
+nav button.active{background:var(--accent-soft);color:var(--accent);opacity:1;font-weight:700}
+.content{min-width:0}
+header.top{display:flex;align-items:center;gap:10px;padding:14px 28px;position:sticky;top:0;z-index:5;
+  background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header.top h1{font-size:18px;margin:0;flex:1}
+.icon-btn{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:10px;height:36px;min-width:36px;
+  padding:0 12px;cursor:pointer;font:inherit;display:inline-grid;place-items:center}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent)}
+#menuBtn{display:none}
+main{max-width:1080px;margin:0 auto;padding:24px 28px 60px}
+
+/* ---------- cards ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:18px;box-shadow:var(--shadow)}
+.card h2{font-size:15.5px;margin:0 0 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card>p.muted:first-of-type{margin-top:-6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.stat{background:var(--field);border:1px solid var(--line);border-radius:12px;padding:14px 16px;position:relative;overflow:hidden}
+.stat::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(var(--accent),var(--accent-2));opacity:.8}
+.stat b{display:block;font-size:21px;margin-top:2px;font-weight:700}
+.stat span{color:var(--muted);font-size:12.5px}
+
+/* ---------- forms ---------- */
+label{display:block;font-size:12.5px;color:var(--muted);margin:12px 0 5px;font-weight:500}
+input,textarea,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--field);
+  color:var(--text);font:inherit;transition:border-color .15s,box-shadow .15s}
+input:focus,textarea:focus,select:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+input[type=file]{padding:8px}
+input[type=checkbox]{width:auto;accent-color:var(--accent)}
+textarea{min-height:96px;resize:vertical}
+.row{display:flex;gap:12px;flex-wrap:wrap}.row>*{flex:1;min-width:150px}
+
+.btn{border:0;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;padding:9px 18px;border-radius:10px;
+  cursor:pointer;font:inherit;font-weight:500;margin-top:14px;transition:transform .1s,box-shadow .15s,filter .15s;
+  box-shadow:0 2px 8px rgba(79,70,229,.25);white-space:nowrap}
+.btn:hover{filter:brightness(1.07);box-shadow:0 4px 14px rgba(79,70,229,.35)}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:var(--accent-soft);color:var(--accent);box-shadow:none}
+.btn.warn{background:var(--bad-soft);color:var(--bad);box-shadow:none}
+.btn.warn:hover{background:var(--bad);color:#fff}
+.btn.danger{background:none;color:var(--accent);padding:3px 8px;margin:0;box-shadow:none;border-radius:8px;font-size:13px}
+.btn.danger:hover{background:var(--accent-soft);filter:none}
+.btn:disabled{opacity:.5;cursor:wait}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.actions .btn{margin-top:6px}
+
+/* ---------- tables ---------- */
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+td,th{padding:10px 12px;border-bottom:1px solid var(--line);text-align:right;vertical-align:middle}
+th{color:var(--muted);font-weight:500;font-size:12.5px;background:var(--field);position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td,table tr:hover td{background:color-mix(in srgb,var(--accent-soft) 45%,transparent)}
+.card[style*="padding:0"]{overflow:hidden}
+#chTbl td,#chTbl th{white-space:nowrap}#chTbl td:nth-child(2){white-space:normal;min-width:180px}
+
+/* ---------- bits ---------- */
+.switch{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.switch:last-child{border:0}
+.switch input[type=checkbox]{appearance:none;-webkit-appearance:none;width:42px;height:24px;border-radius:99px;background:var(--line);
+  position:relative;cursor:pointer;transition:background .2s;border:0;padding:0;flex:none}
+.switch input[type=checkbox]::after{content:"";position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:right .2s}
+.switch input[type=checkbox]:checked{background:var(--accent)}
+.switch input[type=checkbox]:checked::after{right:21px}
+.switch select{width:auto;min-width:130px}
+.badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:11.5px;font-weight:500;line-height:1.8}
+.on{background:var(--ok-soft);color:var(--ok)}.off{background:var(--field);color:var(--muted);border:1px solid var(--line)}
+pre{direction:ltr;text-align:left;background:#0a0c12;color:#c9d1e3;padding:14px;border-radius:12px;overflow:auto;max-height:520px;font-size:12px;line-height:1.6}
+.muted{color:var(--muted);font-size:13px}
+code{background:var(--field);border:1px solid var(--line);padding:0 6px;border-radius:6px;direction:ltr;display:inline-block;font-size:12.5px}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:11px 20px;
+  border-radius:12px;display:none;z-index:50;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:90vw}
+.hidden{display:none!important}
+#ibMsgs>div{box-shadow:var(--shadow)}
+
+/* ---------- login ---------- */
+#login{max-width:380px;margin:14vh auto;text-align:center;padding:32px 28px}
+#login .brand{justify-content:center;font-size:18px;padding-bottom:6px}
+#login input{text-align:center}
+#login .btn{width:100%}
+
+/* ---------- mobile ---------- */
+@media (max-width:860px){
+  #app{grid-template-columns:1fr}
+  #side{position:fixed;inset:0 0 0 auto;width:270px;z-index:40;transform:translateX(100%);transition:transform .25s;box-shadow:var(--shadow)}
+  #app.menu #side{transform:none}
+  #app.menu::after{content:"";position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:30}
+  #menuBtn{display:inline-grid}
+  header.top{padding:12px 16px}
+  main{padding:16px 16px 60px}
+  .card{padding:16px}
+}
+</style>
+</head>
+<body>
+
+<div id="login" class="card hidden">
+  <div class="brand"><i>✦</i>پنل سلف‌بات</div>
+  <p class="muted">برای ادامه رمز پنل را وارد کن</p>
+  <label>رمز پنل</label>
+  <input id="pw" type="password" autofocus>
+  <div id="codeBox" class="hidden"><label>کدی که به Saved Messages تلگرامت فرستاده شد</label><input id="code" inputmode="numeric" dir="ltr"></div>
+  <button class="btn" onclick="doLogin()">ورود</button>
+  <p class="muted">رمز همان <code>PANEL_PASSWORD</code> در فایل <code>.env</code> است.</p>
+</div>
+
+<div id="app" class="hidden">
+<aside id="side"><div class="brand"><i>✦</i>سلف‌بات</div><nav id="tabs"></nav></aside>
+<div class="content">
+<header class="top">
+  <button class="icon-btn" id="menuBtn" onclick="$('app').classList.toggle('menu')" aria-label="منو">☰</button>
+  <h1 id="pageTitle"></h1>
+  <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" title="تغییر تم">◐</button>
+  <button class="icon-btn" onclick="logout()">خروج</button>
+</header>
+<main>
+
+<section data-tab="dash">
+  <div class="card"><h2>وضعیت</h2><div class="grid" id="stats"></div></div>
+  <div class="card"><h2>آمار اکانت <span class="muted">(شمارش چت‌ها هر ۱۰ دقیقه بروز می‌شود)</span></h2><div class="grid" id="acct"></div>
+    <h2 style="margin-top:16px">پرکارترین چت‌ها از زمان روشن شدن</h2><table id="top"></table></div>
+  <div class="card"><h2>فعالیت ۳۰ روز اخیر</h2><div id="actDaily"></div>
+    <h2 style="margin-top:14px">فعالیت بر اساس ساعت</h2><div id="actHourly"></div></div>
+  <div class="card"><h2>دستورها</h2><table id="cmds"></table></div>
+</section>
+
+<section data-tab="chats">
+  <div class="card">
+    <h2>مدیریت چت‌ها</h2>
+    <div class="row">
+      <div><label>نوع</label><select id="chType" onchange="renderChats()">
+        <option value="">همه</option><option value="group">گروه‌ها</option><option value="channel">کانال‌ها</option>
+        <option value="bot">ربات‌ها</option><option value="private">شخصی</option></select></div>
+      <div><label>وضعیت</label><select id="chState" onchange="renderChats()">
+        <option value="">همه</option><option value="unmuted">بادار</option><option value="muted">بی‌صدا</option><option value="unread">خوانده‌نشده</option>
+        <option value="inactive">بی‌فعالیت ۳ ماه+</option><option value="pinned">پین‌شده</option></select></div>
+      <div><label>جستجو</label><input id="chSearch" oninput="renderChats()" placeholder="اسم یا یوزرنیم"></div>
+    </div>
+    <div class="row" style="align-items:center;margin-top:12px">
+      <span class="muted" id="chCount" style="flex:2"></span>
+      <button class="btn ghost" style="margin:0;flex:0" onclick="loadChats(true)">بروزرسانی</button>
+    </div>
+    <div class="actions" id="chActions">
+      <button class="btn" onclick="chatAction('mute')">🔕 بی‌صدا</button>
+      <button class="btn ghost" onclick="chatAction('unmute')">🔔 باصدا</button>
+      <button class="btn ghost" onclick="chatAction('read')">✓ خوانده شود</button>
+      <button class="btn ghost" onclick="chatAction('archive')">🗂 آرشیو</button>
+      <button class="btn ghost" onclick="chatAction('unarchive')">↩ خروج از آرشیو</button>
+      <button class="btn warn" onclick="chatAction('leave')">🚪 خروج از گروه/کانال</button>
+      <button class="btn warn" onclick="chatAction('stopbot')">⛔ توقف ربات (بلاک + حذف چت)</button>
+      <button class="btn ghost" onclick="chatAction('unblock')">آنبلاک</button>
+      <button class="btn ghost" onclick="chatAction('pin')">📌 پین</button>
+      <button class="btn ghost" onclick="chatAction('unpin')">آن‌پین</button>
+      <button class="btn ghost" onclick="folderAction()">📁 افزودن به پوشه</button>
+      <button class="btn ghost" onclick="broadcastAction()">📣 ارسال پیام به انتخاب‌شده‌ها</button>
+    </div>
+    <p class="muted" id="chProgress"></p>
+  </div>
+  <div class="card" style="padding:0;overflow:auto">
+    <table id="chTbl"></table>
+  </div>
+</section>
+
+<section data-tab="notes">
+  <div class="card">
+    <h2>یادداشت جدید</h2>
+    <label>اسم (در تلگرام با <code>.note اسم</code> صدا زده می‌شود)</label><input id="ntName">
+    <label>متن</label><textarea id="ntText"></textarea>
+    <button class="btn" onclick="addNote()">ذخیره</button>
+  </div>
+  <div class="card"><h2>یادداشت‌ها</h2><table id="notesTbl"></table></div>
+</section>
+
+<section data-tab="filter">
+  <div class="card">
+    <h2>فیلتر کلمات گروه</h2>
+    <p class="muted">پیام‌هایی که این کلمات را دارند در گروه‌های فعال پاک می‌شوند. باید در آن گروه ادمین با دسترسی حذف پیام باشی.</p>
+    <label>کلمات (هر خط یک کلمه)</label><textarea id="flWords"></textarea>
+    <label>گروه‌های فعال (هر خط یک آیدی، یا در گروه بنویس <code>.filter on</code>)</label><textarea id="flChats" placeholder="-100..."></textarea>
+    <button class="btn" onclick="saveFilter()">ذخیره</button>
+  </div>
+</section>
+
+<section data-tab="afk">
+  <div class="card">
+    <h2>منشی خودکار <span id="afkBadge" class="badge off">خاموش</span></h2>
+    <p class="muted">وقتی روشن است، به پیام‌های پی‌وی یک‌بار (هر ۱۰ دقیقه برای هر نفر) جواب می‌دهد.</p>
+    <label>متن پاسخ</label>
+    <textarea id="afkReason"></textarea>
+    <div class="row">
+      <button class="btn" onclick="setAfk(true)">روشن کن</button>
+      <button class="btn ghost" onclick="setAfk(false)">خاموش کن</button>
+    </div>
+  </div>
+</section>
+
+<section data-tab="ar">
+  <div class="card">
+    <h2>افزودن پاسخ خودکار</h2>
+    <div class="row">
+      <div><label>کلمه کلیدی</label><input id="arKw" placeholder="مثلاً: قیمت"></div>
+      <div><label>محدوده</label><select id="arScope"><option value="private">فقط پی‌وی</option><option value="all">پی‌وی و گروه</option></select></div>
+    </div>
+    <label>پاسخ</label><textarea id="arReply"></textarea>
+    <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="arExact" style="width:auto"> فقط وقتی کل پیام دقیقاً همین کلمه باشد</label>
+    <button class="btn" onclick="addItem('autoreplies')">افزودن</button>
+  </div>
+  <div class="card"><h2>قوانین فعلی</h2><table id="list-autoreplies"></table></div>
+</section>
+
+<section data-tab="sched">
+  <div class="card">
+    <h2>ارسال زمان‌بندی‌شده</h2>
+    <div class="row">
+      <div><label>چت (آیدی عددی، @یوزرنیم یا me)</label><input id="scChat" list="dlg" placeholder="me"></div>
+      <div><label>زمان ارسال</label><input id="scAt" type="datetime-local"></div>
+      <div><label>تکرار</label><select id="scRep"><option value="0">یک‌بار</option><option value="60">هر ساعت</option>
+        <option value="1440">هر روز</option><option value="10080">هر هفته</option></select></div>
+    </div>
+    <label>متن</label><textarea id="scText"></textarea>
+    <button class="btn" onclick="addItem('schedules')">ثبت</button>
+  </div>
+  <div class="card"><h2>صف ارسال</h2><table id="list-schedules"></table></div>
+</section>
+
+<section data-tab="fwd">
+  <div class="card">
+    <h2>فوروارد خودکار</h2>
+    <p class="muted">هر پیام جدید در چت مبدأ، در مقصد کپی می‌شود (بدون نام فرستنده). فقط برای کانال‌ها و چت‌هایی که اجازه بازنشر داری استفاده کن.</p>
+    <div class="row">
+      <div><label>مبدأ</label><input id="fwSrc" list="dlg" placeholder="-100..."></div>
+      <div><label>مقصد</label><input id="fwDst" list="dlg" placeholder="-100... یا me"></div>
+    </div>
+    <button class="btn" onclick="addItem('forwards')">افزودن</button>
+  </div>
+  <div class="card"><h2>قوانین فعلی</h2><table id="list-forwards"></table></div>
+</section>
+
+<section data-tab="send">
+  <div class="card">
+    <h2>ارسال پیام</h2>
+    <label>چت</label><input id="sdChat" list="dlg" placeholder="me">
+    <label>قالب‌های آماده</label><div id="tplBox"></div>
+    <label>متن (Markdown مجاز است)</label><textarea id="sdText"></textarea>
+    <div class="row"><button class="btn" onclick="sendMsg()">ارسال</button><button class="btn ghost" onclick="saveTpl()">ذخیره به‌عنوان قالب</button></div>
+  </div>
+  <div class="card">
+    <h2>ارسال فایل یا عکس</h2>
+    <label>چت</label><input id="upChat" list="dlg" placeholder="me">
+    <label>فایل (حداکثر ۵۰ مگ)</label><input id="upFile" type="file">
+    <label>کپشن</label><input id="upCap">
+    <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="upPhoto" style="width:auto" checked> عکس‌ها به‌صورت عکس فرستاده شوند</label>
+    <button class="btn" onclick="uploadFile()">ارسال</button>
+  </div>
+  <div class="card"><h2>چت‌های اخیر</h2><table id="dialogs"></table></div>
+</section>
+
+<section data-tab="inbox">
+  <div class="card">
+    <h2>گفتگو</h2>
+    <div class="row" style="align-items:flex-end">
+      <div style="flex:3"><label>چت</label><input id="ibChat" list="dlg" placeholder="آیدی یا @یوزرنیم"></div>
+      <button class="btn" style="flex:0" onclick="loadInbox()">باز کن</button>
+      <button class="btn ghost" style="flex:0" onclick="aiSummary()">🧠 خلاصه</button>
+    </div>
+    <p class="muted" id="ibSummary" style="white-space:pre-wrap"></p>
+  </div>
+  <div class="card"><div id="ibMsgs" style="max-height:460px;overflow:auto"></div>
+    <p class="muted" id="ibReplyTo"></p>
+    <label>پاسخ</label><textarea id="ibText"></textarea>
+    <div class="row"><button class="btn" onclick="sendInbox()">ارسال</button>
+      <button class="btn ghost" onclick="purgeChat($('ibChat').value)">🧹 پاک کردن پیام‌های خودم در این چت</button></div>
+  </div>
+</section>
+
+<section data-tab="groupadm">
+  <div class="card">
+    <h2>مدیریت گروه <span class="muted">(باید ادمین باشی)</span></h2>
+    <div class="row" style="align-items:flex-end">
+      <div style="flex:3"><label>گروه</label><input id="gaChat" list="dlg" placeholder="-100..."></div>
+      <div style="flex:2"><label>جستجوی عضو</label><input id="gaQ"></div>
+      <button class="btn" style="flex:0" onclick="loadMembers()">نمایش اعضا</button>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" onclick="memberAction('mute')">🔇 میوت</button>
+      <button class="btn ghost" onclick="memberAction('unmute')">🔊 رفع میوت</button>
+      <button class="btn warn" onclick="memberAction('kick')">اخراج</button>
+      <button class="btn warn" onclick="memberAction('ban')">بن</button>
+      <button class="btn ghost" onclick="memberAction('unban')">رفع بن</button>
+    </div>
+    <p class="muted" id="gaProgress"></p>
+  </div>
+  <div class="card" style="padding:0;overflow:auto"><table id="gaTbl"></table></div>
+  <div class="card">
+    <h2>پیام خوشامد این گروه</h2>
+    <p class="muted"><code>{name}</code> با اسم عضو جدید جایگزین می‌شود. خالی بگذاری خاموش می‌شود.</p>
+    <textarea id="gaWelcome"></textarea>
+    <button class="btn" onclick="saveWelcome()">ذخیره</button>
+  </div>
+  <div class="card">
+    <h2>ضداسپم</h2>
+    <div class="switch"><span>پاک کردن لینک و یوزرنیم</span><input type="checkbox" id="asLinks"></div>
+    <div class="switch"><span>پاک کردن پیام فورواردی</span><input type="checkbox" id="asFwd"></div>
+    <label>حداکثر پیام هر نفر در ۱۰ ثانیه (بیشتر = ۱ ساعت میوت، ۰ = خاموش)</label><input id="asFlood" type="number" min="0">
+    <label>گروه‌های فعال (هر خط یک آیدی)</label><textarea id="asChats"></textarea>
+    <div class="row"><button class="btn" onclick="saveAntispam()">ذخیره</button>
+      <button class="btn ghost" onclick="addAntispamChat()">افزودن گروه بالا</button></div>
+  </div>
+</section>
+
+<section data-tab="profile">
+  <div class="card">
+    <h2>پروفایل</h2>
+    <div class="row"><div><label>نام</label><input id="pfFirst"></div><div><label>نام خانوادگی</label><input id="pfLast"></div></div>
+    <label>یوزرنیم</label><input id="pfUser" dir="ltr">
+    <label>بیو (حداکثر ۷۰ حرف)</label><input id="pfBio" maxlength="70">
+    <button class="btn" onclick="saveProfile()">ذخیره</button>
+    <label>عکس پروفایل جدید</label><input id="pfPhoto" type="file" accept="image/*">
+    <button class="btn ghost" onclick="uploadPhoto()">آپلود عکس</button>
+  </div>
+  <div class="card">
+    <h2>بیو خودکار <span id="abBadge" class="badge off">خاموش</span></h2>
+    <p class="muted">هر چند دقیقه یکی از این متن‌ها بیو می‌شود. <code>{time}</code> و <code>{date}</code> مجازند.</p>
+    <label>متن‌ها (هر خط یکی)</label><textarea id="abTexts"></textarea>
+    <label>فاصله (دقیقه، حداقل ۵)</label><input id="abInt" type="number" min="5">
+    <div class="row"><button class="btn" onclick="saveAutobio(true)">روشن و ذخیره</button><button class="btn ghost" onclick="saveAutobio(false)">خاموش</button></div>
+  </div>
+  <div class="card">
+    <h2>حریم خصوصی</h2>
+    <div id="pvBox" class="muted">در حال دریافت...</div>
+  </div>
+</section>
+
+<section data-tab="ai">
+  <div class="card">
+    <h2>هوش مصنوعی (Claude)</h2>
+    <p class="muted">کلید را از console.anthropic.com بگیر. درخواست‌ها از پروکسی ربات رد می‌شوند.</p>
+    <label>کلید API</label><input id="aiKey" dir="ltr" placeholder="sk-ant-...">
+    <label>مدل</label><input id="aiModel" dir="ltr">
+    <div class="switch"><span>منشی هوشمند (وقتی منشی روشن است، با هوش مصنوعی جواب بده)</span><input type="checkbox" id="aiAfk"></div>
+    <label>دستور اضافه برای منشی</label><textarea id="aiPrompt"></textarea>
+    <button class="btn" onclick="saveAi()">ذخیره</button>
+  </div>
+  <div class="card">
+    <h2>پرسش</h2>
+    <textarea id="aiQ"></textarea><button class="btn" onclick="aiAsk()">بپرس</button>
+    <p id="aiA" style="white-space:pre-wrap"></p>
+  </div>
+</section>
+
+<section data-tab="security">
+  <div class="card"><h2>دستگاه‌های وارد شده <button class="btn ghost" style="margin:0 8px" onclick="loadSessions()">بروزرسانی</button></h2>
+    <p class="muted">دستگاهی را که نمی‌شناسی خارج کن.</p>
+    <div style="overflow:auto"><table id="sesTbl"></table></div></div>
+  <div class="card"><h2>کاربران بلاک‌شده</h2><div style="overflow:auto"><table id="blkTbl"></table></div></div>
+</section>
+
+<section data-tab="search">
+  <div class="card">
+    <h2>جستجو در پیام‌ها</h2>
+    <div class="row" style="align-items:flex-end">
+      <div style="flex:3"><label>متن</label><input id="srQ" onkeydown="event.key==='Enter'&&doSearch()"></div>
+      <div style="flex:2"><label>فقط در این چت (اختیاری)</label><input id="srChat" list="dlg" placeholder="همه چت‌ها"></div>
+      <button class="btn" style="flex:0" onclick="doSearch()">جستجو</button>
+    </div>
+  </div>
+  <div class="card" style="padding:0;overflow:auto"><table id="srTbl"></table></div>
+</section>
+
+<section data-tab="channels">
+  <div class="card"><h2>کانال‌های من</h2><p class="muted">تعداد اعضا روزی یک‌بار ثبت می‌شود؛ نمودار رشد بعد از چند روز کامل می‌شود. برای صف پست از تب «زمان‌بندی» استفاده کن و آیدی کانال را بده.</p>
+    <div style="overflow:auto"><table id="chnTbl"></table></div></div>
+  <div class="card hidden" id="chnDetail"><h2 id="chnTitle"></h2>
+    <h2 style="font-size:14px">رشد اعضا</h2><div id="chnGrowth"></div>
+    <h2 style="font-size:14px;margin-top:14px">۲۰ پست آخر</h2><div style="overflow:auto"><table id="chnPosts"></table></div></div>
+</section>
+
+<section data-tab="alerts">
+  <div class="card">
+    <h2>هشدار منشن و کلمات</h2>
+    <p class="muted">در گروه‌ها و کانال‌ها اگر کسی منشنت کرد، به پیامت جواب داد یا یکی از این کلمه‌ها آمد، در Saved Messages خبرت می‌کند.</p>
+    <div class="switch"><span>روشن</span><input type="checkbox" id="alOn"></div>
+    <div class="switch"><span>منشن و ریپلای به من</span><input type="checkbox" id="alMen"></div>
+    <label>کلمه‌ها (هر خط یکی، مثلاً اسمت)</label><textarea id="alWords"></textarea>
+    <button class="btn" onclick="saveAlerts()">ذخیره</button>
+  </div>
+  <div class="card">
+    <h2>خبر آنلاین شدن</h2>
+    <label>کاربران (هر خط یک آیدی عددی یا @یوزرنیم)</label><textarea id="wtIds"></textarea>
+    <p class="muted">فقط وقتی کار می‌کند که آن شخص آخرین بازدیدش را از تو پنهان نکرده باشد.</p>
+    <button class="btn" onclick="saveWatch()">ذخیره</button>
+  </div>
+  <div class="card">
+    <h2>هشدار قیمت <span class="muted">(والکس، هر ۵ دقیقه)</span></h2>
+    <div id="pxNow" class="grid"></div>
+    <div class="row" style="align-items:flex-end">
+      <div><label>نماد</label><input id="pxSym" list="pxSyms" dir="ltr" placeholder="USDTTMN"></div>
+      <div><label>شرط</label><select id="pxOp"><option value=">">بالاتر از</option><option value="<">پایین‌تر از</option></select></div>
+      <div><label>عدد</label><input id="pxVal" type="number"></div>
+      <button class="btn" style="flex:0" onclick="addPrice()">افزودن</button>
+    </div>
+    <datalist id="pxSyms"><option value="USDTTMN"><option value="BTCUSDT"><option value="ETHUSDT"><option value="BTCTMN"><option value="TONUSDT"></datalist>
+    <table id="pxTbl" style="margin-top:10px"></table>
+  </div>
+  <div class="card">
+    <h2>ترجمه خودکار چت</h2>
+    <p class="muted">«دریافتی»: پیام‌های آن چت ترجمه‌شده در Saved Messages. «خودم»: پیام‌های خودت در آن چت به زبان مقصد ترجمه و جایگزین می‌شود.</p>
+    <div class="row" style="align-items:flex-end">
+      <div><label>چت</label><input id="atChat" list="dlg"></div>
+      <div><label>زبان مقصد</label><input id="atLang" dir="ltr" placeholder="fa / en / ar / tr"></div>
+      <div><label>حالت</label><select id="atMode"><option value="in">پیام‌های دریافتی</option><option value="out">پیام‌های خودم</option></select></div>
+      <button class="btn" style="flex:0" onclick="saveAutotr(false)">افزودن</button>
+    </div>
+    <table id="atTbl" style="margin-top:10px"></table>
+  </div>
+  <div class="card">
+    <h2>گزارش روزانه</h2>
+    <div class="switch"><span>هر روز در Saved Messages</span><input type="checkbox" id="rpOn"></div>
+    <label>ساعت (تهران)</label><input id="rpHour" type="number" min="0" max="23">
+    <div class="row"><button class="btn" onclick="saveReport()">ذخیره</button><button class="btn ghost" onclick="reportNow()">همین الان بفرست</button></div>
+  </div>
+  <div class="card">
+    <h2>پشتیبان خودکار هفتگی</h2>
+    <div class="switch"><span>هر هفته فایل پشتیبان به Saved Messages</span><input type="checkbox" id="abkOn" onchange="saveAutobackup(false)"></div>
+    <p class="muted" id="abkLast"></p>
+    <button class="btn ghost" onclick="saveAutobackup(true)">همین الان بفرست</button>
+  </div>
+</section>
+
+<section data-tab="settings">
+  <div class="card">
+    <h2>تنظیمات</h2>
+    <div class="switch"><span>ساعت کنار اسم (نام خانوادگی)</span><input type="checkbox" data-set="clock"></div>
+    <div class="switch"><span>اعداد فارسی در ساعت و تاریخ</span><input type="checkbox" data-set="clock_fa"></div>
+    <div class="switch"><span>ورود دومرحله‌ای پنل (کد در Saved Messages)</span><input type="checkbox" data-set="panel_2fa"></div>
+  </div>
+  <div class="card"><h2>پلاگین‌ها</h2><p class="muted">خاموش کردن، دستورها و واکنش‌های آن پلاگین را فوراً قطع می‌کند.</p><div id="plgBox"></div></div>
+  <div class="card">
+    <h2>پشتیبان‌گیری</h2>
+    <p class="muted">همه تنظیمات، یادداشت‌ها، قوانین و زمان‌بندی‌ها (بدون کلید API).</p>
+    <div class="row"><a class="btn" href="/api/backup" style="text-align:center;text-decoration:none">⬇ دانلود پشتیبان</a>
+      <div><label>بازگردانی از فایل</label><input type="file" id="rsFile" accept=".json"></div></div>
+    <button class="btn ghost" onclick="restoreBackup()">بازگردانی</button>
+  </div>
+  <div class="card"><h2>ری‌استارت</h2><button class="btn warn" onclick="restartBot()">🔄 ری‌استارت ربات</button></div>
+
+</section>
+
+<section data-tab="logs">
+  <div class="card"><h2>لاگ‌ها <button class="btn ghost" style="margin:0 8px" onclick="loadLogs()">بروزرسانی</button></h2><pre id="logbox"></pre></div>
+</section>
+
+</main>
+</div>
+</div>
+
+<datalist id="dlg"></datalist>
+<div id="toast"></div>
+
+<script>
+const TABS = {dash:"داشبورد", chats:"مدیریت چت‌ها", afk:"منشی", ar:"پاسخ خودکار", sched:"زمان‌بندی و یادآور", fwd:"فوروارد", notes:"یادداشت‌ها", filter:"فیلتر کلمات", send:"ارسال پیام", inbox:"گفتگو", search:"جستجو", channels:"کانال‌ها", alerts:"هشدارها و گزارش", groupadm:"مدیریت گروه", profile:"پروفایل", ai:"هوش مصنوعی", security:"امنیت", settings:"تنظیمات", logs:"لاگ‌ها"};
+const fa = n => String(n).replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const $ = id => document.getElementById(id);
+
+function toast(msg){ const t=$("toast"); t.textContent=msg; t.style.display="block"; clearTimeout(t._h); t._h=setTimeout(()=>t.style.display="none",2500); }
+
+async function api(path, opts={}){
+  const r = await fetch(path, {headers:{"Content-Type":"application/json"}, ...opts, body: opts.body ? JSON.stringify(opts.body) : undefined});
+  const data = await r.json().catch(()=>({}));
+  if (r.status === 401){ showLogin(); throw new Error("auth"); }
+  if (!r.ok){ toast("❌ " + (data.error || "خطا")); throw new Error(data.error); }
+  return data;
+}
+
+function showLogin(){ $("app").classList.add("hidden"); $("login").classList.remove("hidden"); }
+async function doLogin(){
+  try {
+    if (!$("codeBox").classList.contains("hidden"))
+      { await api("/api/login/code", {method:"POST", body:{code:$("code").value}}); return start(); }
+    const r = await api("/api/login", {method:"POST", body:{password:$("pw").value}});
+    if (r.need_code){ $("codeBox").classList.remove("hidden"); $("code").focus(); toast("کد به Saved Messages فرستاده شد"); return; }
+    start();
+  } catch(e){}
+}
+$("pw").addEventListener("keydown", e => e.key === "Enter" && doLogin());
+$("code").addEventListener("keydown", e => e.key === "Enter" && doLogin());
+async function logout(){ await api("/api/logout",{method:"POST"}); showLogin(); }
+
+function openTab(name){
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("active", b.dataset.t === name));
+  $("pageTitle").textContent = TABS[name] || ""; $("app").classList.remove("menu"); scrollTo(0, 0);
+  document.querySelectorAll("section").forEach(s => s.classList.toggle("hidden", s.dataset.tab !== name));
+  try { localStorage.setItem("tab", name); } catch(e){}
+  ({dash:loadStatus, afk:loadAfk, ar:()=>loadList("autoreplies"), sched:()=>loadList("schedules"),
+    fwd:()=>loadList("forwards"), chats:()=>loadChats(false), notes:loadNotes, filter:loadFilter, send:()=>{loadDialogs(); loadTemplates();}, settings:()=>{loadSettings(); loadPlugins();}, logs:loadLogs,
+    inbox:()=>fillDialogs().catch(()=>{}), groupadm:loadGroupAdm, profile:loadProfile, ai:loadAi, security:loadSessions, search:()=>fillDialogs().catch(()=>{}), channels:loadChannels, alerts:loadAlerts})[name]?.();
+}
+
+async function loadAcct(){
+  const s = await api("/api/stats"), t = s.types || {};
+  $("acct").innerHTML = [
+    ["کل چت‌ها", s.total], ["شخصی", t.private||0], ["گروه", (t.group||0)+(t.supergroup||0)],
+    ["کانال", t.channel||0], ["ربات", t.bot||0], ["خوانده‌نشده", s.unread],
+    ["ارسال‌شده", s.sent], ["دریافت‌شده", s.received],
+  ].map(([k,v]) => `<div class="stat"><span>${k}</span><b>${fa(v)}</b></div>`).join("");
+  $("top").innerHTML = s.top.length ? s.top.map((c,i) => `<tr><td>${fa(i+1)}</td><td>${esc(c.title)}</td><td>${fa(c.count)} پیام</td></tr>`).join("")
+    : `<tr><td class="muted">هنوز پیامی ثبت نشده.</td></tr>`;
+}
+
+// ---------- chat manager ----------
+let allChats = null;
+const selected = new Set();
+const CH_TYPES = {private:"شخصی", group:"گروه", supergroup:"سوپرگروه", channel:"کانال", bot:"ربات"};
+const ACT_NAMES = {mute:"بی‌صدا", unmute:"باصدا", read:"خوانده شدن", archive:"آرشیو", unarchive:"خروج از آرشیو",
+  leave:"خروج", stopbot:"توقف ربات", unblock:"آنبلاک", pin:"پین", unpin:"آن‌پین"};
+const DANGER = {leave:"از این چت‌ها خارج می‌شوی. برای گروه‌ها و کانال‌های خصوصی بدون لینک دعوت نمی‌توانی برگردی.",
+  stopbot:"این ربات‌ها بلاک می‌شوند و تاریخچه چتشان (فقط برای تو) پاک می‌شود. پیام‌های پاک‌شده برنمی‌گردند."};
+
+async function loadChats(force){
+  if (allChats && !force) return renderChats();
+  $("chCount").textContent = "در حال دریافت لیست چت‌ها...";
+  allChats = await api("/api/chats" + (force ? "?force=1" : ""));
+  selected.clear(); renderChats();
+}
+
+function visibleChats(){
+  const t = $("chType").value, st = $("chState").value, q = $("chSearch").value.trim().toLowerCase();
+  return allChats.filter(c =>
+    (!t || c.type === t || (t === "group" && c.type === "supergroup")) &&
+    (!st || (st === "muted" && c.muted) || (st === "unmuted" && !c.muted) || (st === "unread" && c.unread > 0) ||
+     (st === "inactive" && c.last && Date.now()/1000 - c.last > 90*86400) || (st === "pinned" && c.pinned)) &&
+    (!q || c.title.toLowerCase().includes(q) || (c.username || "").toLowerCase().includes(q)));
+}
+
+function renderChats(){
+  if (!allChats) return;
+  const list = visibleChats();
+  const allOn = list.length && list.every(c => selected.has(c.id));
+  $("chCount").textContent = `${fa(list.length)} چت نمایش داده شده — ${fa(selected.size)} انتخاب‌شده`;
+  $("chTbl").innerHTML = `<tr><th><input type="checkbox" ${allOn?"checked":""} onchange="selectAll(this.checked)" style="width:auto"></th>
+    <th>نام</th><th>نوع</th><th>صدا</th><th>خوانده‌نشده</th><th>آخرین پیام</th><th></th></tr>` +
+    list.map(c => `<tr>
+      <td><input type="checkbox" style="width:auto" ${selected.has(c.id)?"checked":""} onchange="toggleSel(${c.id},this.checked)"></td>
+      <td>${esc(c.title)}${c.username?` <span class="muted">@${esc(c.username)}</span>`:""}${c.archived?' <span class="badge off">آرشیو</span>':""}${c.pinned?" 📌":""}</td>
+      <td>${CH_TYPES[c.type]||c.type}</td>
+      <td>${c.muted?'<span class="badge off">🔕 بی‌صدا</span>':'<span class="badge on">🔔</span>'}</td>
+      <td>${c.unread?fa(c.unread):""}</td>
+      <td class="muted">${c.last?new Date(c.last*1000).toLocaleDateString("fa-IR"):""}</td>
+      <td><button class="btn danger" onclick="openInbox(${c.id})">💬</button>
+        <button class="btn danger" onclick="oneAction(${c.id},'${c.muted?"unmute":"mute"}')">${c.muted?"باصدا":"بی‌صدا"}</button>
+        ${["group","supergroup","channel"].includes(c.type)?`<button class="btn danger" onclick="oneAction(${c.id},'leave')">خروج</button>`:""}
+        ${c.type==="bot"?`<button class="btn danger" onclick="oneAction(${c.id},'stopbot')">توقف</button>`:""}</td>
+    </tr>`).join("");
+}
+function toggleSel(id, on){ on ? selected.add(id) : selected.delete(id); renderChats(); }
+function selectAll(on){ visibleChats().forEach(c => on ? selected.add(c.id) : selected.delete(c.id)); renderChats(); }
+
+async function runChatAction(action, ids){
+  const names = ids.map(id => allChats.find(c => c.id === id)?.title || id);
+  if (DANGER[action] && !confirm(`${DANGER[action]}\n\n${fa(ids.length)} چت:\n${names.slice(0,15).join("\n")}${ids.length>15?"\n...":""}\n\nادامه می‌دهی؟`)) return;
+  const btns = document.querySelectorAll("#chActions button, #chTbl button");
+  btns.forEach(b => b.disabled = true);
+  $("chProgress").textContent = `⏳ در حال انجام «${ACT_NAMES[action]}» روی ${fa(ids.length)} چت... (برای جلوگیری از محدودیت تلگرام آرام انجام می‌شود)`;
+  try {
+    const r = await api("/api/chats/action", {method:"POST", body:{action, ids}});
+    const failed = Object.keys(r.failed).length;
+    $("chProgress").textContent = `✅ ${fa(r.ok.length)} موفق` + (failed ? ` — ❌ ${fa(failed)} ناموفق` : "");
+    if (failed) console.table(r.failed);
+    toast("انجام شد");
+    dialogsCache = null; selected.clear();
+    await loadChats(true);
+  } catch(e) { $("chProgress").textContent = ""; }
+  finally { document.querySelectorAll("#chActions button, #chTbl button").forEach(b => b.disabled = false); }
+}
+function chatAction(action){
+  if (!selected.size) return toast("اول چند چت را انتخاب کن");
+  let ids = [...selected];
+  if (action === "stopbot") ids = ids.filter(id => allChats.find(c=>c.id===id)?.type === "bot");
+  if (!ids.length) return toast(action === "stopbot" ? "هیچ رباتی انتخاب نشده" : "هیچ چتی انتخاب نشده");
+  runChatAction(action, ids);
+}
+function oneAction(id, action){ runChatAction(action, [id]); }
+
+async function loadNotes(){
+  const n = await api("/api/notes"), keys = Object.keys(n).sort();
+  $("notesTbl").innerHTML = keys.length ? "<tr><th>اسم</th><th>متن</th><th></th></tr>" + keys.map(k =>
+    `<tr><td><code>${esc(k)}</code></td><td>${esc(n[k])}</td><td><button class="btn danger" onclick="delNote('${esc(k)}')">حذف</button></td></tr>`).join("")
+    : `<tr><td class="muted">یادداشتی نیست.</td></tr>`;
+}
+async function addNote(){
+  await api("/api/notes", {method:"POST", body:{name:$("ntName").value, text:$("ntText").value}});
+  toast("✅ ذخیره شد"); $("ntName").value = $("ntText").value = ""; loadNotes();
+}
+async function delNote(name){ await api("/api/notes/" + encodeURIComponent(name), {method:"DELETE"}); toast("حذف شد"); loadNotes(); }
+
+async function loadFilter(){
+  const f = await api("/api/filter");
+  $("flWords").value = f.words.join("\n"); $("flChats").value = f.chats.join("\n");
+}
+async function saveFilter(){
+  const lines = id => $(id).value.split("\n").map(s => s.trim()).filter(Boolean);
+  await api("/api/filter", {method:"POST", body:{words:lines("flWords"), chats:lines("flChats")}});
+  toast("✅ ذخیره شد");
+}
+
+function uptime(s){ const d=Math.floor(s/86400), h=Math.floor(s%86400/3600), m=Math.floor(s%3600/60);
+  return fa((d? d+" روز ":"") + h + " ساعت " + m + " دقیقه"); }
+
+async function loadStatus(){
+  const s = await api("/api/status");
+  $("stats").innerHTML = [
+    ["حساب", esc(s.name) + (s.username ? " @" + esc(s.username) : "")],
+    ["مدت روشن بودن", uptime(s.uptime)],
+    ["منشی", s.afk ? "روشن" : "خاموش"],
+    ["پلاگین‌ها", fa(s.plugins.length)],
+    ["پاسخ خودکار", fa(s.counts.autoreplies)],
+    ["زمان‌بندی", fa(s.counts.schedules)],
+  ].map(([k,v]) => `<div class="stat"><span>${k}</span><b>${v}</b></div>`).join("");
+  $("cmds").innerHTML = "<tr><th>دستور</th><th>توضیح</th></tr>" +
+    s.commands.map(c => `<tr><td><code>${esc(c.prefix+c.name)}</code></td><td>${esc(c.desc)}</td></tr>`).join("");
+  loadAcct().catch(()=>{}); loadActivity().catch(()=>{});
+}
+
+async function loadAfk(){
+  const a = await api("/api/afk");
+  $("afkReason").value = a.reason || "";
+  $("afkBadge").textContent = a.on ? "روشن" : "خاموش";
+  $("afkBadge").className = "badge " + (a.on ? "on" : "off");
+}
+async function setAfk(on){
+  await api("/api/afk", {method:"POST", body:{on, reason:$("afkReason").value}});
+  toast(on ? "منشی روشن شد" : "منشی خاموش شد"); loadAfk();
+}
+
+const COLS = {
+  autoreplies: [["کلمه", i=>esc(i.keyword)], ["پاسخ", i=>esc(i.reply)], ["محدوده", i=>i.scope==="all"?"همه":"پی‌وی"]],
+  schedules: [["چت", i=>`<code>${esc(i.chat)}</code>`], ["زمان", i=>new Date(i.at*1000).toLocaleString("fa-IR")], ["متن", i=>esc(i.text)], ["تکرار", i=>({3600:"هر ساعت",86400:"هر روز",604800:"هر هفته"})[i.repeat]||(i.repeat?fa(i.repeat/60)+" دقیقه":"—")]],
+  forwards: [["مبدأ", i=>`<code>${esc(i.source)}</code>`], ["مقصد", i=>`<code>${esc(i.target)}</code>`]],
+};
+async function loadList(key){
+  const items = await api("/api/list/" + key);
+  const head = "<tr>" + COLS[key].map(c=>`<th>${c[0]}</th>`).join("") + "<th></th></tr>";
+  $("list-"+key).innerHTML = items.length ? head + items.map(i =>
+    "<tr>" + COLS[key].map(c=>`<td>${c[1](i)}</td>`).join("") +
+    `<td><button class="btn danger" onclick="delItem('${key}','${esc(i.id)}')">حذف</button></td></tr>`).join("")
+    : `<tr><td class="muted">موردی ثبت نشده.</td></tr>`;
+  if (key !== "autoreplies") fillDialogs();
+}
+async function addItem(key){
+  let body;
+  if (key === "autoreplies") body = {keyword:$("arKw").value, reply:$("arReply").value, scope:$("arScope").value, exact:$("arExact").checked};
+  if (key === "schedules"){
+    const t = $("scAt").value ? new Date($("scAt").value).getTime()/1000 : "";
+    body = {chat:$("scChat").value || "me", text:$("scText").value, at:t, repeat:Number($("scRep").value)};
+  }
+  if (key === "forwards") body = {source:$("fwSrc").value, target:$("fwDst").value};
+  await api("/api/list/" + key, {method:"POST", body});
+  toast("✅ ثبت شد"); loadList(key);
+}
+async function delItem(key, id){ await api(`/api/list/${key}/${id}`, {method:"DELETE"}); toast("حذف شد"); loadList(key); }
+
+let dialogsCache = null;
+async function fillDialogs(){
+  if (!dialogsCache) dialogsCache = await api("/api/dialogs");
+  $("dlg").innerHTML = '<option value="me">Saved Messages</option>' +
+    dialogsCache.map(d => `<option value="${d.id}">${esc(d.title)}</option>`).join("");
+  return dialogsCache;
+}
+async function loadDialogs(){
+  const ds = await fillDialogs();
+  const TYPES = {private:"شخصی", group:"گروه", supergroup:"سوپرگروه", channel:"کانال", bot:"ربات"};
+  $("dialogs").innerHTML = "<tr><th>نام</th><th>نوع</th><th>آیدی</th></tr>" + ds.map(d =>
+    `<tr style="cursor:pointer" onclick="$('sdChat').value='${d.id}'"><td>${esc(d.title)}</td><td>${TYPES[d.type]||d.type}</td><td><code>${d.id}</code></td></tr>`).join("");
+}
+async function sendMsg(){
+  await api("/api/send", {method:"POST", body:{chat:$("sdChat").value || "me", text:$("sdText").value}});
+  toast("✅ ارسال شد"); $("sdText").value = "";
+}
+
+async function loadSettings(){
+  const s = await api("/api/settings");
+  document.querySelectorAll("[data-set]").forEach(el => {
+    el.checked = !!s[el.dataset.set];
+    el.onchange = async () => { await api("/api/settings", {method:"POST", body:{[el.dataset.set]: el.checked}}); toast("ذخیره شد"); };
+  });
+}
+
+async function loadLogs(){
+  const l = await api("/api/logs");
+  $("logbox").textContent = l.lines.join("\n") || "لاگی نیست.";
+  $("logbox").scrollTop = 1e9;
+}
+
+// ---------- extra: folders, broadcast, purge ----------
+async function folderAction(){
+  if (!selected.size) return toast("اول چند چت را انتخاب کن");
+  const fs = await api("/api/folders");
+  if (!fs.length) return toast("پوشه‌ای در تلگرام نساخته‌ای");
+  const pick = prompt("شماره پوشه را بنویس:\n" + fs.map((f,i)=>`${i+1}. ${f.title} (${fa(f.count)})`).join("\n"));
+  const f = fs[parseInt(pick)-1]; if (!f) return;
+  const r = await api("/api/folders/add", {method:"POST", body:{folder:f.id, ids:[...selected]}});
+  toast(`✅ ${fa(r.added)} چت به «${f.title}» اضافه شد`);
+}
+async function broadcastAction(){
+  if (!selected.size) return toast("اول چند چت را انتخاب کن");
+  const text = prompt(`متن پیام برای ${fa(selected.size)} چت:`); if (!text) return;
+  if (!confirm(`این پیام به ${fa(selected.size)} چت فرستاده می‌شود. ادامه؟`)) return;
+  $("chProgress").textContent = "⏳ در حال ارسال (بین هر پیام ۱.۵ ثانیه فاصله)...";
+  const r = await api("/api/broadcast", {method:"POST", body:{text, ids:[...selected]}});
+  const nf = Object.keys(r.failed).length;
+  $("chProgress").textContent = `✅ ${fa(r.ok)} ارسال شد` + (nf ? ` — ❌ ${fa(nf)} ناموفق` : "");
+}
+async function purgeChat(chat){
+  if (!chat) return toast("چت را مشخص کن");
+  if (!confirm("همه پیام‌های خودت در این چت (تا ۱۰۰۰ پیام آخر) برای همه پاک می‌شود و برنمی‌گردد. ادامه؟")) return;
+  toast("⏳ در حال پاک کردن...");
+  const r = await api("/api/purge", {method:"POST", body:{chat:String(chat).trim()}});
+  toast(`🧹 ${fa(r.deleted)} پیام پاک شد`);
+}
+function openInbox(id){ openTab("inbox"); $("ibChat").value = id; loadInbox(); }
+
+// ---------- inbox ----------
+let replyTo = null;
+async function loadInbox(){
+  const chat = $("ibChat").value.trim(); if (!chat) return;
+  $("ibSummary").textContent = ""; setReply(null);
+  const ms = await api("/api/messages/" + encodeURIComponent(chat));
+  $("ibMsgs").innerHTML = ms.map(m => `<div onclick="setReply(${m.id})" style="margin:6px 0;padding:8px 12px;border-radius:10px;max-width:85%;cursor:pointer;background:${m.out?"var(--accent-soft)":"var(--bg)"};${m.out?"margin-left:auto":"margin-right:auto"}">
+    <div class="muted">${esc(m.from)} · ${new Date(m.date*1000).toLocaleString("fa-IR")}</div>
+    ${m.media?`<span class="badge off">${esc(m.media)}</span> `:""}${esc(m.text).replace(/\n/g,"<br>")}</div>`).join("") || '<p class="muted">پیامی نیست.</p>';
+  $("ibMsgs").scrollTop = 1e9;
+}
+function setReply(id){
+  replyTo = id;
+  $("ibReplyTo").innerHTML = id ? `پاسخ به پیام ${fa(id)} <button class="btn danger" onclick="setReply(null)">لغو</button>` : "";
+}
+async function sendInbox(){
+  await api("/api/reply", {method:"POST", body:{chat:$("ibChat").value, text:$("ibText").value, reply_to:replyTo}});
+  $("ibText").value = ""; loadInbox();
+}
+async function aiSummary(){
+  const chat = $("ibChat").value.trim(); if (!chat) return toast("چت را مشخص کن");
+  $("ibSummary").textContent = "🧠 در حال خلاصه کردن...";
+  try { $("ibSummary").textContent = (await api("/api/ai/summary", {method:"POST", body:{chat}})).summary; }
+  catch(e){ $("ibSummary").textContent = ""; }
+}
+
+// ---------- upload ----------
+async function upload(path, fd){
+  const r = await fetch(path, {method:"POST", body:fd});
+  const d = await r.json().catch(()=>({}));
+  if (r.status === 401){ showLogin(); throw new Error("auth"); }
+  if (!r.ok){ toast("❌ " + (d.error || "خطا")); throw new Error(d.error); }
+  return d;
+}
+async function uploadFile(){
+  const f = $("upFile").files[0]; if (!f) return toast("فایل انتخاب کن");
+  if (f.size > 50*1024*1024) return toast("فایل بزرگ‌تر از ۵۰ مگ است");
+  const fd = new FormData();
+  fd.append("chat", $("upChat").value || "me"); fd.append("caption", $("upCap").value);
+  fd.append("as_photo", $("upPhoto").checked ? "1" : "0"); fd.append("file", f);
+  toast("⬆ در حال آپلود..."); await upload("/api/upload", fd); toast("✅ ارسال شد"); $("upFile").value = "";
+}
+
+// ---------- group admin ----------
+let members = [];
+const memSel = new Set();
+async function loadMembers(){
+  const chat = $("gaChat").value.trim(); if (!chat) return toast("گروه را مشخص کن");
+  members = await api(`/api/members/${encodeURIComponent(chat)}?q=${encodeURIComponent($("gaQ").value)}`);
+  memSel.clear(); renderMembers();
+  const w = await api("/api/welcome"); $("gaWelcome").value = w[chat] || "";
+}
+function memToggle(id, on){ on ? memSel.add(id) : memSel.delete(id); }
+function renderMembers(){
+  $("gaTbl").innerHTML = "<tr><th></th><th>نام</th><th>وضعیت</th><th>آیدی</th></tr>" + members.map(m => `<tr>
+    <td><input type="checkbox" style="width:auto" onchange="memToggle(${m.id},this.checked)"></td>
+    <td>${esc(m.name)}${m.username?` <span class="muted">@${esc(m.username)}</span>`:""}${m.bot?" 🤖":""}</td>
+    <td>${esc(m.status)}</td><td><code>${m.id}</code></td></tr>`).join("");
+}
+async function memberAction(action){
+  if (!memSel.size) return toast("اول عضو انتخاب کن");
+  if (["ban","kick"].includes(action) && !confirm(`${fa(memSel.size)} نفر ${action==="ban"?"بن":"اخراج"} شوند؟`)) return;
+  $("gaProgress").textContent = "⏳ ...";
+  const r = await api("/api/members/action", {method:"POST", body:{chat:$("gaChat").value.trim(), action, ids:[...memSel]}});
+  const nf = Object.keys(r.failed).length;
+  $("gaProgress").textContent = `✅ ${fa(r.ok)} موفق` + (nf ? ` — ❌ ${fa(nf)} ناموفق` : "");
+  loadMembers();
+}
+async function saveWelcome(){
+  await api("/api/welcome", {method:"POST", body:{chat:$("gaChat").value, text:$("gaWelcome").value}}); toast("✅ ذخیره شد");
+}
+async function loadGroupAdm(){
+  fillDialogs().catch(()=>{});
+  const a = await api("/api/config/antispam");
+  $("asLinks").checked = a.links; $("asFwd").checked = a.forwards; $("asFlood").value = a.flood; $("asChats").value = a.chats.join("\n");
+}
+async function saveAntispam(){
+  await api("/api/config/antispam", {method:"POST", body:{links:$("asLinks").checked, forwards:$("asFwd").checked,
+    flood:Number($("asFlood").value)||0, chats:$("asChats").value.split("\n")}});
+  toast("✅ ذخیره شد");
+}
+function addAntispamChat(){
+  const c = $("gaChat").value.trim(); if (!c) return toast("گروه را بالا بنویس");
+  if (!$("asChats").value.split("\n").includes(c)) $("asChats").value = ($("asChats").value.trim() + "\n" + c).trim();
+  saveAntispam();
+}
+
+// ---------- profile ----------
+const PV = {last_seen:"آخرین بازدید", photo:"عکس پروفایل", phone:"شماره تلفن", forwards:"لینک در فوروارد", calls:"تماس", invites:"افزودن به گروه"};
+const PV_OPTS = [["all","همه"],["contacts","مخاطبین"],["nobody","هیچ‌کس"]];
+async function loadProfile(){
+  const p = await api("/api/profile");
+  $("pfFirst").value = p.first_name; $("pfLast").value = p.last_name; $("pfUser").value = p.username; $("pfBio").value = p.bio;
+  const a = await api("/api/config/autobio");
+  $("abTexts").value = a.texts.join("\n"); $("abInt").value = a.interval;
+  $("abBadge").textContent = a.on ? "روشن" : "خاموش"; $("abBadge").className = "badge " + (a.on ? "on" : "off");
+  const pv = await api("/api/privacy");
+  $("pvBox").innerHTML = Object.entries(PV).map(([k,l]) => `<div class="switch"><span>${l}</span>
+    <select style="width:auto" onchange="setPrivacy('${k}',this.value)">${PV_OPTS.map(([v,t]) =>
+    `<option value="${v}" ${pv[k]===v?"selected":""}>${t}</option>`).join("")}</select></div>`).join("");
+}
+async function saveProfile(){
+  await api("/api/profile", {method:"POST", body:{first_name:$("pfFirst").value, last_name:$("pfLast").value,
+    bio:$("pfBio").value, username:$("pfUser").value}});
+  toast("✅ پروفایل ذخیره شد");
+}
+async function uploadPhoto(){
+  const f = $("pfPhoto").files[0]; if (!f) return toast("عکس انتخاب کن");
+  const fd = new FormData(); fd.append("file", f);
+  toast("⬆ ..."); await upload("/api/profile/photo", fd); toast("✅ عکس عوض شد");
+}
+async function saveAutobio(on){
+  await api("/api/config/autobio", {method:"POST", body:{on, texts:$("abTexts").value.split("\n"), interval:Number($("abInt").value)||30}});
+  toast(on ? "بیو خودکار روشن شد" : "بیو خودکار خاموش شد"); loadProfile();
+}
+async function setPrivacy(key, value){ await api("/api/privacy", {method:"POST", body:{key, value}}); toast("✅ ذخیره شد"); }
+
+// ---------- AI ----------
+async function loadAi(){
+  const a = await api("/api/config/ai");
+  $("aiKey").value = a.key; $("aiModel").value = a.model; $("aiAfk").checked = a.afk_ai; $("aiPrompt").value = a.prompt;
+}
+async function saveAi(){
+  await api("/api/config/ai", {method:"POST", body:{key:$("aiKey").value, model:$("aiModel").value,
+    afk_ai:$("aiAfk").checked, prompt:$("aiPrompt").value}});
+  toast("✅ ذخیره شد"); loadAi();
+}
+async function aiAsk(){
+  $("aiA").textContent = "🧠 ...";
+  try { $("aiA").textContent = (await api("/api/ai/ask", {method:"POST", body:{q:$("aiQ").value}})).answer; }
+  catch(e){ $("aiA").textContent = ""; }
+}
+
+// ---------- security ----------
+async function loadSessions(){
+  const s = await api("/api/sessions");
+  $("sesTbl").innerHTML = "<tr><th>دستگاه</th><th>برنامه</th><th>IP / کشور</th><th>آخرین فعالیت</th><th></th></tr>" + s.map(x => `<tr>
+    <td>${esc(x.device)} <span class="muted">${esc(x.platform)}</span></td><td>${esc(x.app)}</td><td>${esc(x.ip)} ${esc(x.country)}</td>
+    <td>${new Date(x.active*1000).toLocaleString("fa-IR")}</td>
+    <td>${x.current?'<span class="badge on">همین ربات</span>':`<button class="btn danger" onclick="killSession('${x.hash}')">خارج کن</button>`}</td></tr>`).join("");
+  const b = await api("/api/blocked");
+  $("blkTbl").innerHTML = b.length ? b.map(u => `<tr><td>${esc(u.title)}${u.username?` <span class="muted">@${esc(u.username)}</span>`:""}${u.bot?" 🤖":""}</td>
+    <td><button class="btn danger" onclick="unblockUser(${u.id})">آنبلاک</button></td></tr>`).join("") : '<tr><td class="muted">کسی بلاک نیست.</td></tr>';
+}
+async function killSession(hash){
+  if (!confirm("این دستگاه از اکانت خارج شود؟")) return;
+  await api("/api/sessions/kill", {method:"POST", body:{hash}}); toast("✅ خارج شد"); loadSessions();
+}
+async function unblockUser(id){ await api("/api/chats/action", {method:"POST", body:{action:"unblock", ids:[id]}}); toast("آنبلاک شد"); loadSessions(); }
+
+// ---------- plugins / backup / restart ----------
+async function loadPlugins(){
+  const ps = await api("/api/plugins");
+  $("plgBox").innerHTML = ps.map(p => `<div class="switch"><span><code>${esc(p.name)}</code></span>
+    <input type="checkbox" ${p.on?"checked":""} onchange="togglePlugin('${p.name}',this.checked)"></div>`).join("");
+}
+async function togglePlugin(name, on){ await api("/api/plugins", {method:"POST", body:{name, on}}); toast(on ? "روشن شد" : "خاموش شد"); }
+async function restoreBackup(){
+  const f = $("rsFile").files[0]; if (!f) return toast("فایل پشتیبان را انتخاب کن");
+  if (!confirm("تنظیمات فعلی با فایل پشتیبان جایگزین می‌شود. ادامه؟")) return;
+  let data; try { data = JSON.parse(await f.text()); } catch(e){ return toast("فایل JSON نامعتبر است"); }
+  await api("/api/restore", {method:"POST", body:data}); toast("✅ بازگردانی شد");
+}
+async function restartBot(){
+  if (!confirm("ربات ری‌استارت شود؟ چند ثانیه قطع می‌شود.")) return;
+  await api("/api/restart", {method:"POST"}); toast("🔄 در حال ری‌استارت... ۱۵ ثانیه بعد صفحه را رفرش کن");
+}
+
+// ---------- charts (plain SVG bars) ----------
+function bars(rows, opts={}){
+  // rows: [label, a, b?]; a = sent (accent), b = received (muted)
+  if (!rows.length) return '<p class="muted">هنوز داده‌ای نیست.</p>';
+  const W = 640, H = 160, pad = 18, n = rows.length, bw = (W - pad) / n;
+  const max = Math.max(1, ...rows.map(r => (r[1]||0) + (r[2]||0)));
+  const step = Math.max(1, Math.ceil(n / 12));
+  return `<svg viewBox="0 0 ${W} ${H+22}" style="width:100%;height:auto" role="img">` + rows.map((r,i) => {
+    const x = i*bw + 2, ha = (r[1]||0)/max*H, hb = (r[2]||0)/max*H, w = Math.max(2, bw - 4);
+    return `<g><title>${esc(r[0])}: ${fa(r[1]||0)}${r[2]!==undefined?" / "+fa(r[2]):""}</title>
+      <rect x="${x}" y="${H-ha-hb}" width="${w}" height="${hb}" fill="var(--line)" rx="2"/>
+      <rect x="${x}" y="${H-ha}" width="${w}" height="${ha}" fill="var(--accent)" rx="2"/>
+      ${i % step === 0 ? `<text x="${x + w/2}" y="${H+15}" font-size="10" text-anchor="middle" fill="var(--muted)">${esc(r[0])}</text>` : ""}</g>`;
+  }).join("") + "</svg>" + (opts.legend === false ? "" :
+    '<p class="muted"><span style="color:var(--accent)">■</span> ارسال &nbsp; <span style="color:var(--line)">■</span> دریافت</p>');
+}
+async function loadActivity(){
+  const a = await api("/api/activity");
+  $("actDaily").innerHTML = bars(a.daily.map(d => [fa(d.date.slice(5).replace("-","/")), d.sent, d.recv]));
+  $("actHourly").innerHTML = bars(a.hourly.map((h,i) => [fa(i), h[0], h[1]]));
+}
+
+// ---------- search ----------
+async function doSearch(){
+  const q = $("srQ").value.trim(), chat = $("srChat").value.trim();
+  $("srTbl").innerHTML = '<tr><td class="muted">در حال جستجو...</td></tr>';
+  const r = await api(`/api/search?q=${encodeURIComponent(q)}&chat=${encodeURIComponent(chat)}`);
+  $("srTbl").innerHTML = r.length ? "<tr><th>چت</th><th>فرستنده</th><th>متن</th><th>تاریخ</th><th></th></tr>" + r.map(m => `<tr>
+    <td>${esc(m.chat_title)}</td><td>${esc(m.from)}</td><td>${esc(m.text)}</td>
+    <td class="muted">${new Date(m.date*1000).toLocaleDateString("fa-IR")}</td>
+    <td><button class="btn danger" onclick="openInbox(${m.chat})">💬</button>${m.link?` <a href="${esc(m.link)}" target="_blank" rel="noopener">لینک</a>`:""}</td></tr>`).join("")
+    : '<tr><td class="muted">چیزی پیدا نشد.</td></tr>';
+}
+
+// ---------- channels ----------
+let channelsCache = [];
+async function loadChannels(){
+  channelsCache = await api("/api/channels");
+  $("chnTbl").innerHTML = channelsCache.length ? "<tr><th>کانال</th><th>اعضا</th><th>رشد ۷ روز</th><th></th></tr>" + channelsCache.map((c,i) => {
+    const h = Object.entries(c.history).sort(), last = h.at(-1)?.[1], week = h.at(-8)?.[1] ?? h[0]?.[1];
+    const g = last !== undefined && week !== undefined ? last - week : null;
+    return `<tr><td>${esc(c.title)}${c.username?` <span class="muted">@${esc(c.username)}</span>`:""}</td><td>${last!==undefined?fa(last):"—"}</td>
+      <td>${g===null?"—":(g>=0?"+":"")+fa(g)}</td><td><button class="btn danger" onclick="channelDetail(${i})">جزئیات</button></td></tr>`;
+  }).join("") : '<tr><td class="muted">کانالی که سازنده‌اش باشی پیدا نشد.</td></tr>';
+}
+async function channelDetail(i){
+  const c = channelsCache[i];
+  $("chnDetail").classList.remove("hidden"); $("chnTitle").textContent = c.title;
+  $("chnGrowth").innerHTML = bars(Object.entries(c.history).sort().map(([d,v]) => [fa(d.slice(5).replace("-","/")), v]), {legend:false});
+  const ps = await api(`/api/channels/${c.id}/posts`);
+  $("chnPosts").innerHTML = "<tr><th>پست</th><th>بازدید</th><th>فوروارد</th><th>تاریخ</th></tr>" + ps.map(p =>
+    `<tr><td>${esc(p.text)}</td><td>${fa(p.views)}</td><td>${fa(p.forwards)}</td><td class="muted">${new Date(p.date*1000).toLocaleDateString("fa-IR")}</td></tr>`).join("");
+}
+
+// ---------- alerts tab ----------
+const PX_OP = {">":"بالاتر از", "<":"پایین‌تر از"};
+async function loadAlerts(){
+  fillDialogs().catch(()=>{});
+  const m = await api("/api/monitor");
+  $("alOn").checked = m.alerts.on; $("alMen").checked = m.alerts.mentions; $("alWords").value = m.alerts.words.join("\n");
+  $("wtIds").value = m.watch.join("\n");
+  $("pxTbl").innerHTML = m.prices.map(a => `<tr><td><code>${esc(a.sym)}</code></td><td>${PX_OP[a.op]}</td><td>${fa(a.value.toLocaleString())}</td>
+    <td><button class="btn danger" onclick="delPrice('${a.id}')">حذف</button></td></tr>`).join("") || '<tr><td class="muted">هشداری نیست.</td></tr>';
+  $("atTbl").innerHTML = Object.entries(m.autotr).map(([chat, r]) => `<tr><td><code>${esc(chat)}</code> ${esc((dialogsCache||[]).find(d=>String(d.id)===chat)?.title||"")}</td>
+    <td>${esc(r.lang)}</td><td>${r.mode==="in"?"دریافتی":"خودم"}</td><td><button class="btn danger" onclick="saveAutotr(true,'${chat}')">حذف</button></td></tr>`).join("") || '<tr><td class="muted">قانونی نیست.</td></tr>';
+  $("rpOn").checked = m.report.on; $("rpHour").value = m.report.hour;
+  $("abkOn").checked = m.autobackup.on;
+  $("abkLast").textContent = m.autobackup.last ? "آخرین پشتیبان: " + new Date(m.autobackup.last*1000).toLocaleString("fa-IR") : "";
+  api("/api/prices").then(p => $("pxNow").innerHTML = Object.entries(p).map(([k,v]) =>
+    `<div class="stat"><span>${k}</span><b>${fa(Math.round(v).toLocaleString())}</b></div>`).join("")).catch(()=>{});
+}
+const lines = id => $(id).value.split("\n").map(s => s.trim()).filter(Boolean);
+async function saveAlerts(){ await api("/api/monitor/alerts", {method:"POST", body:{on:$("alOn").checked, mentions:$("alMen").checked, words:lines("alWords")}}); toast("✅ ذخیره شد"); }
+async function saveWatch(){ await api("/api/monitor/watch", {method:"POST", body:{ids:lines("wtIds")}}); toast("✅ ذخیره شد"); loadAlerts(); }
+async function addPrice(){
+  await api("/api/monitor/prices", {method:"POST", body:{sym:$("pxSym").value, op:$("pxOp").value, value:$("pxVal").value}});
+  toast("✅ هشدار ثبت شد"); loadAlerts();
+}
+async function delPrice(id){ await api("/api/monitor/prices/" + id, {method:"DELETE"}); loadAlerts(); }
+async function saveAutotr(off, chat){
+  await api("/api/monitor/autotr", {method:"POST", body: off ? {chat, off:true} : {chat:$("atChat").value, lang:$("atLang").value, mode:$("atMode").value}});
+  toast("✅ ذخیره شد"); loadAlerts();
+}
+async function saveReport(){ await api("/api/monitor/report", {method:"POST", body:{on:$("rpOn").checked, hour:Number($("rpHour").value)}}); toast("✅ ذخیره شد"); }
+async function reportNow(){ toast("⏳ ..."); await api("/api/monitor/report/now", {method:"POST"}); toast("✅ گزارش به Saved Messages رفت"); }
+async function saveAutobackup(now){
+  await api("/api/monitor/autobackup", {method:"POST", body:{on:$("abkOn").checked, now}});
+  toast(now ? "✅ پشتیبان به Saved Messages رفت" : "✅ ذخیره شد"); loadAlerts();
+}
+
+// ---------- templates ----------
+let templates = [];
+async function loadTemplates(){
+  templates = await api("/api/list/templates");
+  $("tplBox").innerHTML = templates.map((t,i) => `<span class="badge off" style="cursor:pointer;margin:2px;padding:4px 10px" onclick="useTpl(${i})">${esc(t.name)}</span>
+    <button class="btn danger" onclick="delTpl('${t.id}')">✕</button>`).join("") || '<span class="muted">قالبی نیست.</span>';
+}
+function useTpl(i){ $("sdText").value = templates[i].text; }
+async function saveTpl(){
+  const name = prompt("اسم قالب:"); if (!name) return;
+  await api("/api/list/templates", {method:"POST", body:{name, text:$("sdText").value}}); toast("✅ قالب ذخیره شد"); loadTemplates();
+}
+async function delTpl(id){ await api("/api/list/templates/" + id, {method:"DELETE"}); loadTemplates(); }
+
+// ---------- live events ----------
+let evSrc = null;
+function startEvents(){
+  if (evSrc) return;
+  evSrc = new EventSource("/api/events");
+  evSrc.onmessage = e => {
+    const ev = JSON.parse(e.data);
+    const icon = {pm:"💬", alert:"🔔", online:"🟢"}[ev.type] || "•";
+    toast(`${icon} ${ev.from}: ${ev.text}`.slice(0, 120));
+    try { if (document.hidden && Notification.permission === "granted") new Notification(`${icon} ${ev.from}`, {body: ev.text}); } catch(_){}
+  };
+  evSrc.onerror = () => { evSrc.close(); evSrc = null; setTimeout(startEvents, 10000); };
+  try { if (Notification.permission === "default") Notification.requestPermission(); } catch(_){}
+}
+
+// ---------- theme ----------
+function applyTheme(t){
+  if (t) document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme;
+  $("themeBtn").textContent = t === "dark" ? "☀" : t === "light" ? "🌙" : "◐";
+}
+function toggleTheme(){
+  const cur = document.documentElement.dataset.theme;
+  const next = !cur ? (matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "dark") : cur === "dark" ? "light" : "dark";
+  applyTheme(next); try { localStorage.setItem("theme", next); } catch(_){}
+}
+
+const NAV = [
+  ["", [["dash","📊"]]],
+  ["چت و پیام", [["chats","🗂"],["inbox","💬"],["send","✉️"],["search","🔎"],["sched","⏰"]]],
+  ["خودکارسازی", [["afk","💤"],["ar","🤖"],["fwd","↪️"],["alerts","🔔"],["ai","🧠"]]],
+  ["گروه و کانال", [["groupadm","👥"],["channels","📢"],["filter","🚫"]]],
+  ["حساب", [["profile","👤"],["notes","📝"],["security","🛡"],["settings","⚙️"],["logs","📜"]]],
+];
+function start(){
+  $("login").classList.add("hidden"); $("app").classList.remove("hidden");
+  $("tabs").innerHTML = NAV.map(([g, items]) => (g ? `<div class="grp">${g}</div>` : "") +
+    items.map(([k, ic]) => `<button data-t="${k}" onclick="openTab('${k}')"><span>${ic}</span>${TABS[k]}</button>`).join("")).join("");
+  let t = "dash"; try { t = localStorage.getItem("tab") || "dash"; } catch(e){}
+  openTab(TABS[t] ? t : "dash");
+  startEvents();
+}
+
+$("app").addEventListener("click", e => { if (e.target === $("app")) $("app").classList.remove("menu"); });
+try { applyTheme(localStorage.getItem("theme")); } catch(_){ applyTheme(null); }
+api("/api/status").then(start).catch(()=>{});
+</script>
+</body>
