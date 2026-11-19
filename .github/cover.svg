@@ -5,7 +5,7 @@
 <circle cx="1130" cy="90" r="190" fill="#fff" fill-opacity=".06"/><circle cx="1210" cy="330" r="120" fill="#fff" fill-opacity=".05"/>
 <text x="64" y="132" font-size="64" font-weight="700" fill="#fff" font-family="Segoe UI,Arial">Telegram Userbot</text>
 <text x="64" y="186" font-size="26" fill="#fff" fill-opacity=".92" font-family="Segoe UI,Arial">Plugin-based Telegram userbot (Pyrogram) with web panel</text>
-<text x="1216" y="246" font-size="26" fill="#fff" fill-opacity=".92" text-anchor="end" direction="rtl" font-family="Vazirmatn,Tahoma,Segoe UI">یوزربات تلگرام پلاگین‌محور با پنل وب و ربات سالن</text>
+<text x="1216" y="246" font-size="26" fill="#fff" fill-opacity=".92" text-anchor="start" direction="rtl" font-family="Vazirmatn,Tahoma,Segoe UI">یوزربات تلگرام پلاگین‌محور با پنل وب و ربات سالن</text>
 <rect x="64" y="300" rx="17" width="82" height="34" fill="#ffffff" fill-opacity=".14" stroke="#fff" stroke-opacity=".35"/><text x="105.0" y="323" text-anchor="middle" font-size="16" fill="#fff" font-family="Segoe UI,Arial">Python</text><rect x="158" y="300" rx="17" width="102" height="34" fill="#ffffff" fill-opacity=".14" stroke="#fff" stroke-opacity=".35"/><text x="209.0" y="323" text-anchor="middle" font-size="16" fill="#fff" font-family="Segoe UI,Arial">Pyrogram</text><rect x="272" y="300" rx="17" width="92" height="34" fill="#ffffff" fill-opacity=".14" stroke="#fff" stroke-opacity=".35"/><text x="318.0" y="323" text-anchor="middle" font-size="16" fill="#fff" font-family="Segoe UI,Arial">asyncio</text>
 <text x="1216" y="372" font-size="16" fill="#fff" fill-opacity=".7" text-anchor="end" font-family="Segoe UI,Arial">mahsen81.ir</text>
 </svg>
