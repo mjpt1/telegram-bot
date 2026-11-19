@@ -1,3 +1,35 @@
+<!-- gen:header -->
+<p align="center"><img src=".github/cover.svg" alt="Telegram Userbot" width="100%"></p>
+
+<h1 align="center">Telegram Userbot</h1>
+<p align="center"><b>یوزربات تلگرام پلاگین‌محور با پنل وب و ربات سالن</b><br><i>Plugin-based Telegram userbot (Pyrogram) with web panel</i></p>
+<p align="center"><img alt="Python" src="https://img.shields.io/badge/-Python-229ed9?style=for-the-badge"> <img alt="Pyrogram" src="https://img.shields.io/badge/-Pyrogram-229ed9?style=for-the-badge"> <img alt="asyncio" src="https://img.shields.io/badge/-asyncio-229ed9?style=for-the-badge"></p>
+
+<div dir="rtl">
+
+## ✨ امکانات
+
+- سیستم پلاگین با بارگذاری خودکار
+- مدیریت FloodWait و تلاش مجدد
+- پنل وب و اجرای خودکار در ویندوز
+- نمونه‌ی ربات نوبت‌دهی سالن
+
+</div>
+
+## 🚀 Quick start
+
+```bash
+pip install -r requirements.txt
+copy .env.example .env
+python gen_session.py
+python main.py
+```
+
+---
+
+<!-- gen:docs -->
+## 📚 مستندات کامل · Full documentation
+
 # Telegram Userbot (Pyrogram / Kurigram)
 
 ## Structure
@@ -69,3 +101,8 @@ async def hello(client, message):
     await edit(message, "Hi 👋")
 ```
 Disable a plugin: rename to `_hello.py`.
+
+---
+
+<p align="center">ساخته‌شده توسط <a href="https://mahsen81.ir"><b>محسن جباره‌اصل</b></a> — برنامه‌نویسی، طراحی سایت، ربات و هوش مصنوعی<br>
+Built by <a href="https://mahsen81.ir">Mohsen Jabbareh-Asl</a> · ⭐ اگر مفید بود، ستاره بدهید · Need a custom version? <a href="https://mahsen81.ir">Get in touch</a></p>
